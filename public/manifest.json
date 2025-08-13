@@ -1,0 +1,29 @@
+{
+  "manifest_version": 3,
+  "name": "Faceit 2 Leetify uploader",
+  "version": "0.1.0",
+  "description": "Downloads Faceit matches automatically and uploads them to Leetify.",
+  "action": {
+    "default_title": "Faceit 2 Leetify uploader",
+    "default_popup": "popup.html"
+  },
+  "options_ui": {
+    "page": "options.html",
+    "open_in_tab": true
+  },
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+  "permissions": [],
+  "host_permissions": [
+    "<all_urls>"
+  ],
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"],
+      "run_at": "document_idle"
+    }
+  ]
+}
