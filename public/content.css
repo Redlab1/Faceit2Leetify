@@ -1,39 +1,53 @@
 /* Faceit 2 Leetify Extension Button Styles */
 .f2l-button {
   position: relative;
-  background: linear-gradient(135deg, #ff5722 0%, #ff7043 100%);
-  color: white;
-  border: none;
+  background: transparent;
+  color: rgb(255, 85, 0);
+  border: 1px solid rgb(255, 85, 0);
   border-radius: 6px;
-  padding: 8px 16px;
+  padding: 10px 16px;
+  height: 40px;
   font-size: 14px;
-  font-weight: 600;
+  font-weight: 700;
+  text-transform: uppercase;
   cursor: pointer;
   transition: all 0.2s ease;
-  box-shadow: 0 2px 8px rgba(255, 87, 34, 0.3);
   z-index: 10000;
-  font-family: inherit;
-  display: inline-flex;
+  font-family: Play, sans-serif;
+  display: flex;
   align-items: center;
-  gap: 6px;
-  margin-left: 8px;
+  justify-content: center;
+  width: 100%;
+  gap: 8px;
+  margin: 12px 0; /* more spacing above and below */
 }
 
 .f2l-button:hover {
-  background: linear-gradient(135deg, #e64a19 0%, #ff5722 100%);
-  box-shadow: 0 4px 12px rgba(255, 87, 34, 0.4);
+  background: rgba(255, 85, 0, 0.08);
   transform: translateY(-1px);
 }
 
 .f2l-button:active {
   transform: translateY(0);
-  box-shadow: 0 2px 4px rgba(255, 87, 34, 0.3);
 }
 
 .f2l-button:disabled {
-  opacity: 0.6;
+  opacity: 0.5;
   cursor: not-allowed;
   transform: none !important;
+}
+
+/* State modifiers */
+.f2l-button.ready {
+  color: #4caf50;
+  border-color: #4caf50;
+  background: rgba(76, 175, 80, 0.08);
+}
+
+.f2l-button.success {
+  color: #2e7d32;
+  border-color: #2e7d32;
+  background: rgba(46, 125, 50, 0.08);
 }
 
 .f2l-button-icon {
@@ -76,6 +90,10 @@
 
 .f2l-notification.show {
   transform: translateX(0);
+}
+
+.f2l-notification.success {
+  background: #4caf50;
 }
 
 .f2l-notification.error {

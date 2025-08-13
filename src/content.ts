@@ -204,8 +204,7 @@ function addLeetifyButton(demoButton: HTMLElement) {
   // Insert the button next to the demo button
   demoButton.parentElement?.insertBefore(leetifyButton, demoButton.nextSibling);
   
-  // Add CSS styles
-  addLeetifyButtonStyles();
+  // Styles are provided via public/content.css
 }
 
 function notifyDemoUrlCaptured(url: string) {
@@ -231,123 +230,6 @@ function notifyDemoUrlCaptured(url: string) {
       `;
     }
   });
-}
-
-function addLeetifyButtonStyles() {
-  // Check if styles already added
-  if (document.getElementById('f2l-styles')) return;
-  
-  const style = document.createElement('style');
-  style.id = 'f2l-styles';
-  style.textContent = `
-    .f2l-button {
-      text-size-adjust: 100%;
-      pointer-events: auto;
-      -webkit-font-smoothing: antialiased;
-      overflow: visible;
-      appearance: button;
-      background: none;
-      font: inherit;
-      text-decoration: inherit;
-      cursor: pointer;
-      outline: none;
-      white-space: nowrap;
-      box-sizing: border-box;
-      border-radius: 4px;
-      -webkit-box-align: center;
-      align-items: center;
-      -webkit-box-pack: center;
-      justify-content: center;
-      height: 32px;
-      font-family: Play, sans-serif;
-      font-size: 14px;
-      font-weight: bold;
-      line-height: 16px;
-      text-transform: uppercase;
-      color: rgb(255, 85, 0);
-      background-color: transparent;
-      border: none;
-      padding: 8px;
-      display: flex;
-      text-align: center;
-      width: 100%;
-      margin: 0px 0px 8px;
-      transition: all 0.2s ease;
-      gap: 6px;
-    }
-    
-    .f2l-button:hover {
-      opacity: 0.8;
-      transform: translateY(-1px);
-    }
-    
-    .f2l-button:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-      transform: none;
-    }
-    
-    .f2l-button.ready {
-      color: rgb(76, 175, 80);
-    }
-    
-    .f2l-button.success {
-      color: rgb(46, 125, 50);
-    }
-    
-    .f2l-button-icon {
-      width: 16px;
-      height: 16px;
-      fill: currentColor;
-    }
-    
-    .f2l-spinner {
-      width: 16px;
-      height: 16px;
-      border: 2px solid transparent;
-      border-top: 2px solid currentColor;
-      border-radius: 50%;
-      animation: f2l-spin 1s linear infinite;
-    }
-    
-    @keyframes f2l-spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-    
-    .f2l-notification {
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      padding: 12px 20px;
-      border-radius: 6px;
-      color: white;
-      font-weight: 500;
-      z-index: 10000;
-      transform: translateX(400px);
-      transition: transform 0.3s ease;
-      max-width: 300px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-    }
-    
-    .f2l-notification.show {
-      transform: translateX(0);
-    }
-    
-    .f2l-notification.success {
-      background: #4CAF50;
-    }
-    
-    .f2l-notification.error {
-      background: #f44336;
-    }
-    
-    .f2l-notification.warning {
-      background: #ff9800;
-    }
-  `;
-  
-  document.head.appendChild(style);
 }
 
 async function handleLeetifyButtonClick(event: Event) {
@@ -394,29 +276,7 @@ async function handleLeetifyButtonClick(event: Event) {
 
     if (response.success) {
       logger.info('Demo upload successful', response.data);
-      
-      // Delete the downloaded demo file
-      if (capturedDownloadId !== null) {
-        try {
-          const deleteResponse = await chrome.runtime.sendMessage({
-            type: 'DELETE_DEMO_FILE',
-            data: { downloadId: capturedDownloadId }
-          });
-          
-          if (deleteResponse.success) {
-            logger.info('Demo file deleted from downloads');
-            showNotification('Demo uploaded to Leetify and file cleaned up!', 'success');
-          } else {
-            logger.warn('Failed to delete demo file', deleteResponse.error);
-            showNotification('Demo uploaded to Leetify successfully! (File cleanup failed)', 'success');
-          }
-        } catch (deleteError) {
-          logger.error('Error deleting demo file', deleteError);
-          showNotification('Demo uploaded to Leetify successfully! (File cleanup failed)', 'success');
-        }
-      } else {
-        showNotification('Demo uploaded to Leetify successfully!', 'success');
-      }
+      showNotification('Demo uploaded to Leetify successfully!', 'success');
       
       // Update button to show success
       button.classList.add('success');

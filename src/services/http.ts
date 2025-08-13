@@ -148,63 +148,6 @@ export class HttpService {
       body: data ? JSON.stringify(data) : undefined,
     });
   }
-
-  async put<T>(
-    url: string,
-    data?: any,
-    options?: RequestInit
-  ): Promise<ApiResponse<T>> {
-    return this.request<T>('PUT', url, {
-      ...options,
-      body: data ? JSON.stringify(data) : undefined,
-    });
-  }
-
-  async patch<T>(
-    url: string,
-    data?: any,
-    options?: RequestInit
-  ): Promise<ApiResponse<T>> {
-    return this.request<T>('PATCH', url, {
-      ...options,
-      body: data ? JSON.stringify(data) : undefined,
-    });
-  }
-
-  async delete<T>(url: string, options?: RequestInit): Promise<ApiResponse<T>> {
-    return this.request<T>('DELETE', url, options);
-  }
-
-  // Upload file/form data
-  async upload<T>(
-    url: string,
-    formData: FormData,
-    options?: RequestInit
-  ): Promise<ApiResponse<T>> {
-    const { headers, ...restOptions } = options || {};
-    // Don't set Content-Type for FormData, let the browser set it with boundary
-    return this.request<T>('POST', url, {
-      ...restOptions,
-      headers: {
-        ...Object.fromEntries(
-          Object.entries(this.config.defaultHeaders || {}).filter(
-            ([key]) => key.toLowerCase() !== 'content-type'
-          )
-        ),
-        ...headers,
-      },
-      body: formData,
-    });
-  }
 }
 
-// Convenience factory functions
 export const createHttpService = (config?: HttpConfig) => new HttpService(config);
-
-// Pre-configured common services
-export const jsonApi = new HttpService({
-  defaultHeaders: {
-    'Content-Type': 'application/json',
-    'Accept': 'application/json',
-  },
-});

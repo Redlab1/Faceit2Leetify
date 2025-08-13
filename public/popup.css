@@ -13,3 +13,19 @@ main {
   border-radius: 6px;
   margin-top: 8px;
 }
+
+.btn {
+  background: #0066cc;
+  color: #fff;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.btn + .btn {
+  margin-left: 10px;
+}
+
+.mt-sm { margin-top: 10px; }
+.hidden { display: none; }
