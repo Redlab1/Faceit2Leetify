@@ -43,6 +43,7 @@ async function run({ watch } = { watch: false }) {
     'src/background.ts',
     'src/content.ts',
     'src/popup/popup.ts',
+    'src/popup/logs.ts',
     'src/options/options.ts'
   ];
 

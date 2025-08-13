@@ -1,0 +1,92 @@
+/* Faceit 2 Leetify Extension Button Styles */
+.f2l-button {
+  position: relative;
+  background: linear-gradient(135deg, #ff5722 0%, #ff7043 100%);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(255, 87, 34, 0.3);
+  z-index: 10000;
+  font-family: inherit;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: 8px;
+}
+
+.f2l-button:hover {
+  background: linear-gradient(135deg, #e64a19 0%, #ff5722 100%);
+  box-shadow: 0 4px 12px rgba(255, 87, 34, 0.4);
+  transform: translateY(-1px);
+}
+
+.f2l-button:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(255, 87, 34, 0.3);
+}
+
+.f2l-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
+.f2l-button-icon {
+  width: 16px;
+  height: 16px;
+  fill: currentColor;
+}
+
+/* Loading spinner */
+.f2l-spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top: 2px solid white;
+  border-radius: 50%;
+  animation: f2l-spin 1s linear infinite;
+}
+
+@keyframes f2l-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Notification styles */
+.f2l-notification {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: #4caf50;
+  color: white;
+  padding: 12px 20px;
+  border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 10001;
+  font-size: 14px;
+  font-weight: 500;
+  max-width: 300px;
+  transform: translateX(350px);
+  transition: transform 0.3s ease;
+}
+
+.f2l-notification.show {
+  transform: translateX(0);
+}
+
+.f2l-notification.error {
+  background: #f44336;
+}
+
+.f2l-notification.warning {
+  background: #ff9800;
+}
+
+/* Override styles to ensure visibility on Faceit */
+.f2l-button, .f2l-notification {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif !important;
+}

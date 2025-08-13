@@ -15,14 +15,21 @@
     "service_worker": "background.js",
     "type": "module"
   },
-  "permissions": [],
+  "permissions": [
+    "storage",
+    "downloads"
+  ],
   "host_permissions": [
     "<all_urls>"
   ],
   "content_scripts": [
     {
-      "matches": ["<all_urls>"],
+      "matches": [
+        "*://www.faceit.com/*/cs2/room/*",
+        "*://www.faceit.com/*/csgo/room/*"
+      ],
       "js": ["content.js"],
+      "css": ["content.css"],
       "run_at": "document_idle"
     }
   ]
