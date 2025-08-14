@@ -12,6 +12,8 @@ const outdir = join(process.cwd(), 'dist');
 function copyDir(src, dest) {
   mkdirSync(dest, { recursive: true });
   for (const entry of readdirSync(src)) {
+  // Skip removed Options page assets
+  if (entry === 'options.html' || entry === 'options.css') continue;
     const s = join(src, entry);
     const d = join(dest, entry);
     const st = statSync(s);
@@ -43,8 +45,7 @@ async function run({ watch } = { watch: false }) {
     'src/background.ts',
     'src/content.ts',
     'src/popup/popup.ts',
-    'src/popup/logs.ts',
-    'src/options/options.ts'
+  'src/popup/logs.ts'
   ];
 
   if (watch) {

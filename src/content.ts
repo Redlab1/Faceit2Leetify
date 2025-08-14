@@ -274,7 +274,7 @@ async function handleLeetifyButtonClick(event: Event) {
       data: { demoUrl: capturedDemoUrl }
     });
 
-    if (response.success) {
+  if (response.success) {
       logger.info('Demo upload successful', response.data);
       showNotification('Demo uploaded to Leetify successfully!', 'success');
       
@@ -287,8 +287,8 @@ async function handleLeetifyButtonClick(event: Event) {
         Uploaded!
       `;
       
-      // Reset button and clear captured data
-      setTimeout(async () => {
+  // Reset button and clear captured data (longer visibility)
+  setTimeout(async () => {
         button.disabled = false;
         button.innerHTML = originalContent;
         
@@ -298,7 +298,7 @@ async function handleLeetifyButtonClick(event: Event) {
         // Reset button to default state
         button.classList.remove('ready', 'success');
         button.title = 'Click "Watch Demo" first to download, then use this button to upload to Leetify';
-      }, 3000);
+  }, 3500);
       
     } else {
       throw new Error(response.error || 'Upload failed');

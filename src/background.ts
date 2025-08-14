@@ -1,14 +1,10 @@
 import { createLeetifyApi } from './services/api.js';
-import { SettingsService } from './services/settings.js';
 import { backgroundLogger as logger } from './services/logger.js';
 
 logger.info('Background service worker started');
 
 chrome.runtime.onInstalled.addListener(() => {
   logger.info('Extension installed');
-  // Initialize default settings on first install
-  initializeDefaultSettings();
-  // Set up download monitoring
   setupDownloadMonitoring();
 });
 
@@ -84,20 +80,6 @@ function isDemoFile(url: string, filename: string): boolean {
   );
 }
 
-async function initializeDefaultSettings() {
-  try {
-    const settings = await SettingsService.load();
-    if (!settings.faceitApiKey) {
-      await SettingsService.save({
-        faceitApiKey: '3d25fd73-0ed9-4ee4-b602-fdd1a5517103'
-      });
-      logger.info('Default settings initialized');
-    }
-  } catch (error) {
-    logger.error('Failed to initialize default settings', error);
-  }
-}
-
 chrome.runtime.onMessage.addListener(
   (
     msg: { type?: string; data?: any } | undefined,
@@ -126,14 +108,37 @@ async function handleSubmitDemoUrl(
     
     const leetifyApi = createLeetifyApi();
     logger.apiCall('POST', 'Leetify submit captured demo URL');
-    const result = await leetifyApi.submitDemoUrl(data.demoUrl);
-
-    logger.info('Successfully submitted captured demo to Leetify', result);
-    sendResponse({ 
-      success: true, 
-      message: 'Demo URL submitted to Leetify successfully!',
-      data: result 
-    });
+    // Retry on transient errors (network abort/timeout/5xx) with exponential backoff
+    const maxAttempts = 4; // total attempts
+    const baseDelay = 800; // ms
+    let lastError: unknown;
+    for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+      try {
+        const result = await leetifyApi.submitDemoUrl(data.demoUrl);
+        logger.info('Successfully submitted captured demo to Leetify', result);
+        sendResponse({ 
+          success: true, 
+          message: 'Demo URL submitted to Leetify successfully!',
+          data: result 
+        });
+        return;
+      } catch (err) {
+        lastError = err;
+        const isTimeout = err instanceof Error && /timeout|AbortError/i.test(err.message);
+        const isHttpErr = (err as any)?.name === 'HttpError';
+        const status = isHttpErr ? (err as any).status : undefined;
+        const is5xx = typeof status === 'number' && status >= 500 && status < 600;
+        const shouldRetry = isTimeout || is5xx;
+        if (!shouldRetry || attempt === maxAttempts) {
+          break;
+        }
+        const jitter = Math.floor(Math.random() * 250);
+        const delay = Math.min(5000, baseDelay * Math.pow(2, attempt - 1)) + jitter;
+        logger.warn(`Submit attempt ${attempt} failed; retrying in ${delay}ms`, { status, message: err instanceof Error ? err.message : String(err) });
+        await new Promise((res) => setTimeout(res, delay));
+      }
+    }
+    throw lastError;
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : 'Unknown error';
     const errorDetails = {
